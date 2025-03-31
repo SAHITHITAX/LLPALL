@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLP Agreement Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .agreement-output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9f5e9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #partnerTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        #partnerTable th, #partnerTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #partnerTable th {
+            background-color: #f2f2f2;
+        }
+        .add-row-btn {
+            width: auto;
+            background-color: #2196F3;
+            margin-top: 10px;
+        }
+        .remove-row-btn {
+            width: auto;
+            background-color: #f44336;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>LLP Agreement Generator</h1>
+    <div class="container">
+        <form id="agreementForm">
+            <label for="llpName">LLP Name:</label>
+            <input type="text" id="llpName" required>
+
+            <label for="Date">Date:</label>
+            <input type="text" id="Date" required>
+
+            <label for="Place">Place:</label>
+            <input type="text" id="Place" required>
+
+            <h3>Partner Details</h3>
+            <table id="partnerTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Occupation</th>
+			<th>Din</th>
+			<th>Father Name</th>
+			<th>Email</th>
+			<th>Mobile</th>
+			<th>PAN</th>
+			<th>DOB</th>
+
+
+                        <th>Designated Partner</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="partner-name" required></td>
+                        <td><input type="text" class="partner-address" required></td>
+                        <td><input type="text" class="partner-occupation" required></td>
+                        <td><input type="text" class="partner-din" required></td>
+                        <td><input type="text" class="partner-father" required></td>
+
+                        <td><input type="text" class="partner-email" required></td>
+
+                        <td><input type="text" class="partner-mobile" required></td>
+                        <td><input type="text" class="partner-pan" required></td>
+                        <td><input type="text" class="partner-dob" required></td>
+
+
+                        <td>
+                            <select class="partner-designated">
+                                <option value="Designated Partner">Yes</option>
+                                <option value="Partner">No</option>
+                            </select>
+                        </td>
+                        <td><button type="button" class="remove-row-btn" onclick="removePartnerRow(this)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="add-row-btn" onclick="addPartnerRow()">Add Partner</button>
+
+            <label for="ca">CA details:</label>
+            <table id="CaTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Occupation</th>
+                        <th>Membership Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" id="caname" required></td>
+                        <td><input type="text" id="caaddress" required></td>
+                        <td><input type="text" id="caoccupation" required></td>
+                        <td><input type="text" id="camno" required></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="button" onclick="downloadAgreementAsWord()">Generate LLP Agreement</button>
+        </form>
+    </div>
+
+    <script>
+        function addPartnerRow() {
+            const tbody = document.querySelector("#partnerTable tbody");
+            const newRow = document.createElement("tr");
+            
+            newRow.innerHTML = `
+                <td><input type="text" class="partner-name" required></td>
+                <td><input type="text" class="partner-address" required></td>
+                <td><input type="text" class="partner-occupation" required></td>
+                <td><input type="text" class="partner-din" required></td>
+                <td><input type="text" class="partner-father" required></td>
+                <td><input type="text" class="partner-email" required></td>
+                <td><input type="text" class="partner-mobile" required></td>
+                <td><input type="text" class="partner-pan" required></td>
+                <td><input type="text" class="partner-dob" required></td>
+
+
+                <td>
+                    <select class="partner-designated">
+                        <option value="Designated Partner">Yes</option>
+                        <option value="Partner">No</option>
+                    </select>
+                </td>
+                <td><button type="button" class="remove-row-btn" onclick="removePartnerRow(this)">Remove</button></td>
+            `;
+            
+            tbody.appendChild(newRow);
+        }
+
+        function removePartnerRow(button) {
+            const row = button.closest("tr");
+            if (document.querySelectorAll("#partnerTable tbody tr").length > 1) {
+                row.remove();
+            } else {
+                alert("You need at least one partner.");
+            }
+        }
+
+        function downloadAgreementAsWord() {
+            const llpName = document.getElementById('llpName').value;
+            const Date = document.getElementById('Date').value;
+            const Place = document.getElementById('Place').value;
+            const caname = document.getElementById('caname').value;
+            const caaddress = document.getElementById('caaddress').value;
+            const caoccupation = document.getElementById('caoccupation').value;
+            const camno = document.getElementById('camno').value;
+            
+            // Collect partner data
+            const partners = [];
+            const rows = document.querySelectorAll("#partnerTable tbody tr");
+            rows.forEach(row => {
+                partners.push({
+                    name: row.querySelector(".partner-name").value,
+                    address: row.querySelector(".partner-address").value,
+                    occupation: row.querySelector(".partner-occupation").value,
+                    din: row.querySelector(".partner-din").value,
+                    father: row.querySelector(".partner-father").value,
+                    email: row.querySelector(".partner-email").value,
+                    mobile: row.querySelector(".partner-mobile").value,
+                    pan: row.querySelector(".partner-pan").value,
+                    dob: row.querySelector(".partner-dob").value,
+                    designated: row.querySelector(".partner-designated").value
+                });
+            });
+
+            // Generate partner rows for the table
+            let partnerRows = '';
+            partners.forEach(partner => {
+                partnerRows += `
+                    <tr>
+                        <td>
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="width:30%">Name: </td>
+                                    <td>${partner.name}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address: </td>
+                                    <td>${partner.address}</td>
+                                </tr>
+                                <tr>
+                                    <td>Occupation:</td>
+                                    <td>${partner.occupation}</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>${partner.designated}</td>
+                        <td style="height: 80px"></td>
+                        <td>
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="width:40%">Name: </td>
+                                    <td>${caname}</td>
+                                </tr>
+                                <tr>
+                                    <td>Profession: </td>
+                                    <td>${caoccupation}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address: </td>
+                                    <td>${caaddress}</td>
+                                </tr>
+                                <tr>
+                                    <td>Membership No:</td>
+                                    <td>${camno}</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td></td>
+                    </tr>
+                `;
+            });
+
+            // Generate compact consent forms for each designated partner
+            let consentForms = '';
+            partners.forEach(partner => {
+                if (partner.designated === "Designated Partner") {
+                    consentForms += `
+                        <div style="margin-top: 20px; border:1px solid #ccc; padding:15px; page-break-inside: avoid;">
+                            <div style="text-align:center;">
+                                <h3 style="margin:5px 0; text-decoration:underline;">FORM 9</h3>
+                                <p style="margin:5px 0; font-size:0.9em;">[See rule 7 and 10(8)]</p>
+                                <h3 style="margin:5px 0;">CONSENT TO ACT AS DESIGNATED PARTNER</h3>
+                            </div>
+
+                            <p style="margin:10px 0;">To,</p>
+                            <p style="margin:5px 0;"><strong></strong></p>
+                            <p style="margin:10px 0;"><strong>Subject:</strong> Consent to act as Designated Partner</p>${llpName}
+
+   <p style="margin:10px 0;">${partner.din}</p>
+                            
+                            <p style="margin:10px 0; text-align:justify;">
+                                I, <strong>${partner.name}</strong>, hereby give my consent to act as designated partner of ${llpName}, 
+                                pursuant to Section 7(3) of the Limited Liability Partnership Act, 2008.
+                            </p>
+                            
+                            <p style="margin:10px 0;"><strong><u>Particulars</u></strong></p>
+ <p style="margin:10px 0;">${partner.din}</p>
+                            
+<table style="border-collapse: collapse; width: 100%;">
+    <tbody>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px; width: 5%;">1</td>
+            <td style="text-align: left; padding: 4px; width: 40%; white-space: nowrap;">DIN:</td>
+            <td style="text-align: left; padding: 4px; width: 55%;">${partner.din}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">2</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">Name:</td>
+            <td style="text-align: left; padding: 4px;">${partner.name}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">3</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">Father’s/Husband’s Name:</td>
+            <td style="text-align: left; padding: 4px;">${partner.father}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">4</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">Present residential address:</td>
+            <td style="text-align: left; padding: 4px;">${partner.address}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">5</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">E-mail Id:</td>
+            <td style="text-align: left; padding: 4px;">${partner.email}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">6</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">Contact Number:</td>
+            <td style="text-align: left; padding: 4px;">${partner.mobile}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">7</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">PAN:</td>
+            <td style="text-align: left; padding: 4px;">${partner.pan}</td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="text-align: left; padding: 4px;">8</td>
+            <td style="text-align: left; padding: 4px; white-space: nowrap;">Date of Birth:</td>
+            <td style="text-align: left; padding: 4px;">${partner.dob}</td>
+        </tr>
+    </tbody>
+</table>
+                            <p style="margin:10px 0; text-align:justify;">
+                                I hereby state that I satisfy the conditions and requirements for being eligible to be a partner 
+                                and I have not been disqualified to act as a partner.
+                            </p>
+
+                            <div style="margin-top:30px; display:flex; justify-content:space-between;">
+                                <div>
+                                    <p style="margin:5px 0;"><strong>Designated Partner</strong></p>
+                                    <p style="margin:5px 0;">Signature: ___________________</p>
+                                    <p style="margin:5px 0;">Name: ${partner.din}</p>
+                                </div>
+                                <div>
+                                    <p style="margin:5px 0;"><strong>Date:</strong> ${Date}</p>
+                                    <p style="margin:5px 0;"><strong>Place:</strong> ${Place}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // Word-compatible HTML with compact formatting
+            const agreementHTML = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='UTF-8'></head>
+                <body style="font-family:Calibri, sans-serif; font-size:11pt; line-height:1.3;">
+
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <h3 style="text-decoration:underline; margin:5px 0;">SUBSCRIBER SHEET</h3>
+                    </div>
+
+                    <p style="text-align:justify; margin:10px 0;">
+                        We, the several partners whose names are subscribed below, are desirous of being formed into a LLP 
+                        for carrying on a lawful business with a view to earn profit and have entered or agreed to enter 
+                        into a LLP agreement in writing.
+                    </p>
+                    
+                    <p style="text-align:justify; margin:10px 0;">
+                        We respectively agree to contribute money or other property or other benefit or to perform services 
+                        for the LLP in accordance with the LLP agreement, the particulars of which are stated against our 
+                        respective names.
+                    </p>
+
+                    <p style="text-align:justify; margin:10px 0;">
+                        We hereby give our consent to become a designated partner of the LLP pursuant to section 7(4) of the 
+                        Limited Liability Partnership Act, 2008.
+                    </p>
+
+                    <table style="width:100%; border-collapse:collapse; margin:15px 0;" border="1">
+                        <thead>
+                            <tr>
+                                <th style="width:25%">Name of each partner</th>
+                                <th style="width:15%">Designated Partner/ Partner</th>
+                                <th style="width:15%">Signature</th>
+                                <th style="width:30%">Witness Details</th>
+                                <th style="width:15%">Witness Signature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${partnerRows}
+                        </tbody>
+                    </table>
+
+                    <div style="margin:15px 0; display:flex; justify-content:space-between;">
+                        <p style="margin:5px 0;"><strong>Date:</strong> ${Date}</p>
+                        <p style="margin:5px 0;"><strong>Place:</strong> ${Place}</p>
+                    </div>
+                    
+                    ${consentForms}
+                </body>
+                </html>
+            `;
+
+            // Create a Blob (ensuring correct encoding)
+            const blob = new Blob(['\ufeff', agreementHTML], {
+                type: "application/msword"
+            });
+
+            // Create a temporary link for downloading
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "LLP_Agreement.doc";
+
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
